@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="theme-center.css"></head>
     <script type="text/javascript" src="prototype.js"></script>
 	<script>	
-	var page=0;
+	var page = 0;
 	
 	function test(start){		
 		var url = 'http://spirit.browser.taobao.com/skin/query_page_skin.htm';		
@@ -22,8 +22,10 @@
 			});
 	}	
 	
-	function testRandom(){		
-		$("content").innerHTML="";	
+	function testRandom(){	
+		//滚动条会顶部
+		scrollTo(0, 0);
+		$("content").innerHTML="";			
 		var num = Math.random() * (4213 - 21);
 		num = parseInt(num, 10);		
 		var url = 'http://spirit.browser.taobao.com/skin/query_page_skin.htm';		
@@ -37,24 +39,18 @@
 
 	}
 
-	    function showResponse(originalRequest)
-		{			
-			//alert("ss");
-			var root=originalRequest.responseText.evalJSON();										
-			for(var i = 0;i < 21;i++) {
-				var info = root.data.data[i + page];
-				new Insertion.Bottom('content', "<div class='wallpaper'><div class='thumbnail '><img src='"+info.iconUrl+"'alt='"+info.name+"'><div class='cover'><button class='white-frame' onclick=' openLargeImg(\""+info.imgUrl+"\")'>查看大图</button></div></div><p class='title'>"+info.name+"</p><p class='info'><span class='author'>"+info.authorName+"</span><span class='favor'><span class='iconfont '></span><span>"+info.likeNumber+"</span></span></p></div>"); 				
-			}			
-		}
+	function showResponse(originalRequest)
+	{			
+		var root=originalRequest.responseText.evalJSON();										
+		for(var i = 0;i < 21;i++) {
+			var info = root.data.data[i + page];
+			new Insertion.Bottom('content', "<div class='wallpaper'><div class='thumbnail '><img src='"+info.iconUrl+"'alt='"+info.name+"'><div class='cover'><button class='white-frame' onclick=' openLargeImg(\""+info.imgUrl+"\")'>查看大图</button></div></div><p class='title'>"+info.name+"</p><p class='info'><span class='author'>"+info.authorName+"</span><span class='favor'><span class='iconfont '></span><span>"+info.likeNumber+"</span></span></p></div>"); 				
+		}			
+	}	
 	
-		
-		function test2(){			
-			new Insertion.Bottom('content', "<div class='wallpaper'><div class='thumbnail '><img src='http://gtd.alicdn.com/tfscom/TB10V2cOXXXXXXgXVXXwu0bFXXX'alt='希望'><div class='cover'><button class='white-frame' onclick=' openLargeImg(\'http://gtd.alicdn.com/tfscom/TB10V2cOXXXXXXgXVXXwu0bFXXX\')'>立即使用</button></div></div><p class='title'>希望</p><p class='info'><span class='author'>UC浏览器</span><span class='favor'><span class='iconfont '></span><span>6160</span></span></p></div>"); 			
-		}
-		
-		function openLargeImg(imgUrl){						
-			window.open(imgUrl);
-		}
+	function openLargeImg(imgUrl){						
+		window.open(imgUrl);
+	}
 	</script>
   <body onload="test(0)">
     <div id="app-theme-center">
