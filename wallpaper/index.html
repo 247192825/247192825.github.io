@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  
+  <head uc-lang="zh-CN">
+    <meta charset="UTF-8">
+	<meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <title>壁纸中心</title>	
+    <style>html, * {-webkit-user-select:text!important; -moz-user-select:text!important;}</style>
+    <link rel="stylesheet" href="theme-center.css"></head>
+    <script type="text/javascript" src="prototype.js"></script>
+	<script>	
+	var page=0;
+	
+	function test(start){		
+		var url = 'http://spirit.browser.taobao.com/skin/query_page_skin.htm';		
+		page = start;			
+		var myAjax = new Ajax.Request(	
+			"wallpaper.json", 
+			{
+				method: 'get', 
+				onComplete: showResponse
+			});
+	}	
+	
+	function testRandom(){		
+		$("content").innerHTML="";	
+		var num = Math.random() * (4213 - 21);
+		num = parseInt(num, 10);		
+		var url = 'http://spirit.browser.taobao.com/skin/query_page_skin.htm';		
+		page = num;
+		var myAjax = new Ajax.Request(	
+			"wallpaper.json", 
+			{
+				method: 'get', 
+				onComplete: showResponse
+			});
+
+	}
+
+	    function showResponse(originalRequest)
+		{			
+			//alert("ss");
+			var root=originalRequest.responseText.evalJSON();										
+			for(var i = 0;i < 21;i++) {
+				var info = root.data.data[i + page];
+				new Insertion.Bottom('content', "<div class='wallpaper'><div class='thumbnail '><img src='"+info.iconUrl+"'alt='"+info.name+"'><div class='cover'><button class='white-frame' onclick=' openLargeImg(\""+info.imgUrl+"\")'>查看大图</button></div></div><p class='title'>"+info.name+"</p><p class='info'><span class='author'>"+info.authorName+"</span><span class='favor'><span class='iconfont '></span><span>"+info.likeNumber+"</span></span></p></div>"); 				
+			}			
+		}
+	
+		
+		function test2(){			
+			new Insertion.Bottom('content', "<div class='wallpaper'><div class='thumbnail '><img src='http://gtd.alicdn.com/tfscom/TB10V2cOXXXXXXgXVXXwu0bFXXX'alt='希望'><div class='cover'><button class='white-frame' onclick=' openLargeImg(\'http://gtd.alicdn.com/tfscom/TB10V2cOXXXXXXgXVXXwu0bFXXX\')'>立即使用</button></div></div><p class='title'>希望</p><p class='info'><span class='author'>UC浏览器</span><span class='favor'><span class='iconfont '></span><span>6160</span></span></p></div>"); 			
+		}
+		
+		function openLargeImg(imgUrl){						
+			window.open(imgUrl);
+		}
+	</script>
+  <body onload="test(0)">
+    <div id="app-theme-center">
+      <div>
+        <div class="navigation-container">
+          <div class="navigation">
+            <span class="nav">
+              <a class="active" href="http://spirit.browser.taobao.com/theme-center#/wallpaper?cid=0" target="_blank">壁纸中心</a></span>
+			  <a class="external-link" href="javascript:testRandom();"><button class="primary">随机看壁纸</button></a>
+          </div>		  			  
+        </div>
+        <div class="main-container">
+          <div class="main-anchor">
+            <div class="main">                
+                <div class="content" id="content">
+                  <span></span>
+					<!--
+                  <div class="wallpaper">
+                    <div class="thumbnail ">
+                      <img src="http://gtd.alicdn.com/tfscom/TB10V2cOXXXXXXgXVXXwu0bFXXX" alt="希望">
+                      <div class="cover">							
+                        <button class="white-frame" onclick="openLargeImg('http://gtd.alicdn.com/tfscom/TB10V2cOXXXXXXgXVXXwu0bFXXX')">浏览大图</button>
+						</div>
+                    </div>
+                    <p class="title">希望</p>
+                    <p class="info">
+                      <span class="author">UC浏览器</span>
+                      <span class="favor">
+                        <span class="iconfont "></span>
+                        <span>6160</span></span>
+                    </p>
+                  </div>
+					-->				  
+                  <noscript></noscript>
+              </div>
+            </div>            
+        </div>        
+		</div>
+		</div>
+  </div>
+  </body>
+
+</html>
