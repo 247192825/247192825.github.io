@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="googlebot" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1">  
+  <style>html, * {-webkit-user-select:text!important; -moz-user-select:text!important;}</style>
+  <style>
+    .page {
+      font-weight: 900;
+      height: 40px;
+      text-align: center;
+      color: #888;
+      margin: 20px auto 0;
+      background: #f2f2f2;
+    }
+
+    .pagelist {
+      font-size: 0;
+      background: #fff;
+      height: 50px;
+      line-height: 50px;
+    }
+
+    .pagelist span {
+      font-size: 14px;
+    }
+
+    .pagelist .jump {
+      border: 1px solid #ccc;
+      padding: 5px 8px;
+      -webkit-border-radius: 4px;
+      -moz-border-radius: 4px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-left: 5px;
+    }
+
+    .pagelist .bgprimary {
+      cursor: default;
+      color: #fff;
+      background: #337ab7;
+      border-color: #337ab7;
+    }
+
+    .jumpinp input {
+      width: 55px;
+      height: 26px;
+      font-size: 13px;
+      border: 1px solid #ccc;
+      -webkit-border-radius: 4px;
+      -moz-border-radius: 4px;
+      border-radius: 4px;
+      text-align: center;
+    }
+
+    .ellipsis {
+      padding: 0px 8px;
+    }
+
+    .jumppoint {
+      margin-left: 30px;
+    }
+
+    .pagelist .gobtn {
+      font-size: 12px;
+    }
+
+    .bgprimary {
+      cursor: default;
+      color: #fff;
+      background: #337ab7;
+      border-color: #337ab7;
+    }
+    .pagelist .jump.disabled{
+      pointer-events: none;
+      background: #ddd;
+    }
+  </style>
+  <script type="text/javascript" src="vue.min.js"></script>
+  <script type="text/javascript" src="prototype.js"></script>
+
+  <link rel="stylesheet" href="theme-center.css"> 
+
+  <title>壁纸中心-分页</title>
+
+<script>		
+	var root = null;
+	function init(){		
+		var myAjax = new Ajax.Request(	
+			"wallpaper.json", 
+			{
+				method: 'get', 
+				onComplete: showResponse
+			});
+	}	
+	
+	function testRandom(){	
+		//滚动条会顶部
+		scrollTo(0, 0);
+		$("content").innerHTML="";			
+		var num = Math.random() * 201;
+		num = parseInt(num, 10);				
+		addElement((num-1) * 21);
+	}
+
+	function showResponse(originalRequest)
+	{			
+		root = originalRequest.responseText.evalJSON().data;	
+		addElement(0);
+/*
+		for(var i = 0;i < 21;i++) {
+			var info = root.data.data[i + page];
+			new Insertion.Bottom('content', "<div class='wallpaper'><div class='thumbnail '><img src='"+info.iconUrl+"'alt='"+info.name+"'><div class='cover'><button class='white-frame' onclick=' openLargeImg(\""+info.imgUrl+"\")'>查看大图</button></div></div><p class='title'>"+info.name+"</p><p class='info'><span class='author'>"+info.authorName+"</span><span class='favor'><span class='iconfont '></span><span>"+info.likeNumber+"</span></span></p></div>"); 				
+		}		*/	
+	}	
+	
+	function addElement(page){
+		//滚动条会顶部
+		scrollTo(0, 0);
+		$("content").innerHTML="";
+		for(var i = 0;i < 21;i++) {
+			var info = root.data[i + page];
+			new Insertion.Bottom('content', "<div class='wallpaper'><div class='thumbnail '><img src='"+info.iconUrl+"'alt='"+info.name+"'><div class='cover'><button class='white-frame' onclick=' openLargeImg(\""+info.imgUrl+"\")'>查看大图</button></div></div><p class='title'>"+info.name+"</p><p class='info'><span class='author'>"+info.authorName+"</span><span class='favor'><span class='iconfont '></span><span>"+info.likeNumber+"</span></span></p></div>"); 				
+		}		
+	}
+	
+	function openLargeImg(imgUrl){						
+		window.open(imgUrl);
+	}
+	</script>
+
+
+</head>
+
+<body>
+<div id="app-theme-center">
+      <div>
+        <div class="navigation-container">
+          <div class="navigation">
+            <span class="nav">
+              <a class="active" href="http://spirit.browser.taobao.com/theme-center#/wallpaper?cid=0" target="_blank">壁纸中心</a></span>
+			  <a class="external-link"  href="javascript:testRandom();"><button class="primary">随机看壁纸</button></a>
+          </div>		  			  
+        </div>
+        <div class="main-container">
+          <div class="main-anchor">
+            <div class="main">                
+                <div class="content" id="content">
+                  <span></span>					  
+                  <noscript></noscript>
+              </div>
+            </div>            
+        </div>        
+		</div>
+		</div>
+  </div> 
+<div id="app">
+    <div>
+      <div class="page"  v-show="show">
+        <div class="pagelist">
+          <span v-show="current_page>5" class="jump" @click="jumpPage(1)">1</span>
+          <span class="ellipsis"  v-show="efont">...</span>
+          <span class="jump" v-for="num in indexs" :class="{bgprimary:current_page==num}" @click="jumpPage(num)">{{num}}</span>
+          <span class="ellipsis"  v-show="ebehind">...</span>
+          <span v-show="current_page<pages-4" class="jump" @click="jumpPage(pages)">{{pages}}</span>
+          <span class="jumppoint">跳转到：</span>
+          <span class="jumpinp"><input type="text" v-model="changePage"></span>
+          <span class="jump gobtn" @click="jumpPage(changePage)">GO</span>
+        </div>
+      </div>
+    </div>
+  </div>
+<script>
+    var newlist = new Vue({
+      el: '#app',
+      data: {
+        current_page: 1, //当前页
+        pages: 201, //总页数
+        changePage:'',//跳转页
+        nowIndex:0
+      },
+      computed:{
+         show:function(){
+             return this.pages && this.pages !=1
+         },
+         pstart: function() {
+           return this.current_page == 1;
+         },
+         pend: function() {
+           return this.current_page == this.pages;
+         },
+         efont: function() {
+           if (this.pages <= 7) return false;
+           return this.current_page > 5
+         },
+         ebehind: function() {
+           if (this.pages <= 7) return false;
+           var nowAy = this.indexs;
+           return nowAy[nowAy.length - 1] != this.pages;
+         },
+         indexs: function() {
+           var left = 1,
+             right = this.pages,
+             ar = [];
+           if (this.pages >= 7) {
+             if (this.current_page > 5 && this.current_page < this.pages - 4) {
+               left = Number(this.current_page) - 3;
+               right = Number(this.current_page) + 3;
+             } else {
+               if (this.current_page <= 5) {
+                 left = 1;
+                 right = 7;
+               } else {
+                 right = this.pages;
+
+                 left = this.pages - 6;
+               }
+             }
+           }
+           while (left <= right) {
+             ar.push(left);
+             left++;
+           }
+           return ar;
+         },
+       },
+      methods: {
+        jumpPage: function(id) {
+          this.current_page = id;
+		  addElement((id-1)*21);
+        },
+      },
+    })
+	init();
+  </script>   
+</body>
+
+</html>
+

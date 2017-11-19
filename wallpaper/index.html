@@ -8,12 +8,9 @@
     <style>html, * {-webkit-user-select:text!important; -moz-user-select:text!important;}</style>
     <link rel="stylesheet" href="theme-center.css"></head>
     <script type="text/javascript" src="prototype.js"></script>
-	<script>	
-	var page = 0;
-	
-	function test(start){		
-		var url = 'http://spirit.browser.taobao.com/skin/query_page_skin.htm';		
-		page = start;			
+	<script>		
+	var root = null;
+	function init(){						
 		var myAjax = new Ajax.Request(	
 			"wallpaper.json", 
 			{
@@ -26,33 +23,37 @@
 		//滚动条会顶部
 		scrollTo(0, 0);
 		$("content").innerHTML="";			
-		var num = Math.random() * (4213 - 21);
-		num = parseInt(num, 10);		
-		var url = 'http://spirit.browser.taobao.com/skin/query_page_skin.htm';		
-		page = num;
-		var myAjax = new Ajax.Request(	
-			"wallpaper.json", 
-			{
-				method: 'get', 
-				onComplete: showResponse
-			});
-
+		var num = Math.random()*(4213-21);
+		num = parseInt(num, 10);				
+		addElement(num);
 	}
 
 	function showResponse(originalRequest)
 	{			
-		var root=originalRequest.responseText.evalJSON();										
+		root = originalRequest.responseText.evalJSON().data;	
+		addElement(0);
+/*
 		for(var i = 0;i < 21;i++) {
 			var info = root.data.data[i + page];
 			new Insertion.Bottom('content', "<div class='wallpaper'><div class='thumbnail '><img src='"+info.iconUrl+"'alt='"+info.name+"'><div class='cover'><button class='white-frame' onclick=' openLargeImg(\""+info.imgUrl+"\")'>查看大图</button></div></div><p class='title'>"+info.name+"</p><p class='info'><span class='author'>"+info.authorName+"</span><span class='favor'><span class='iconfont '></span><span>"+info.likeNumber+"</span></span></p></div>"); 				
-		}			
+		}		*/	
 	}	
+	
+	function addElement(page){
+		//滚动条会顶部
+		scrollTo(0, 0);
+		$("content").innerHTML="";
+		for(var i = 0;i < 21;i++) {
+			var info = root.data[i + page];
+			new Insertion.Bottom('content', "<div class='wallpaper'><div class='thumbnail '><img src='"+info.iconUrl+"'alt='"+info.name+"'><div class='cover'><button class='white-frame' onclick=' openLargeImg(\""+info.imgUrl+"\")'>查看大图</button></div></div><p class='title'>"+info.name+"</p><p class='info'><span class='author'>"+info.authorName+"</span><span class='favor'><span class='iconfont '></span><span>"+info.likeNumber+"</span></span></p></div>"); 				
+		}		
+	}
 	
 	function openLargeImg(imgUrl){						
 		window.open(imgUrl);
 	}
 	</script>
-  <body onload="test(0)">
+  <body onload="init()">
     <div id="app-theme-center">
       <div>
         <div class="navigation-container">
