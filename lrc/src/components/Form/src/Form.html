@@ -1,0 +1,25 @@
+<!-- Form Component -->
+<el-form ref="form" :model="model" :rules="rules" label-position="right" label-width="70px">
+  <el-form-item label="歌曲名" prop="songName">
+    <slot name="songName" />
+  </el-form-item>
+  <el-form-item label="歌手名" prop="singerName">
+    <slot name="singerName" />
+  </el-form-item>
+  <el-form-item label="专辑名" prop="albumName">
+    <slot name="albumName" />
+  </el-form-item>
+  <el-form-item label="编辑人" prop="authorName">
+    <slot name="authorName" />
+  </el-form-item>
+  <!-- Editor Component -->
+  <slot name="Editor" />
+  <div class="button-group">
+    <el-tooltip class="lyric-download-confirm-tooltip" content="点击下载后会重置UI，请务必保存到本地" placement="left">
+      <a ref="download" class="el-button el-button--primary" target="_blank" @click="$emit('submit', model)">
+        <i class="el-icon--download1"></i>
+        <span>下载歌词</span>
+      </a>
+    </el-tooltip>
+  </div>
+</el-form>

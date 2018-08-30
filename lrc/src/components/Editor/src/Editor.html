@@ -1,0 +1,47 @@
+<div class="lrc-editor">
+  <div class="lrc-editor_toolbar">
+    <el-tooltip content="添加时间标签(F9)" placement="top">
+      <el-button size="small" icon="plus" @click="add"></el-button>
+    </el-tooltip>
+    <el-tooltip content="替换当前时间标签(F10)" placement="top">
+      <el-button size="small" icon="-replace3" @click="rp"></el-button>
+    </el-tooltip>
+    <el-tooltip content="移除当前时间标签(F11)" placement="top">
+      <el-button size="small" icon="minus" @click="rm"></el-button>
+    </el-tooltip>
+    <el-tooltip content="删除所有时间标签(F12)" placement="top">
+      <el-button size="small" icon="delete2" @click="del"></el-button>
+    </el-tooltip>
+    <el-tooltip content="撤销(CTRL+Z)" placement="top">
+      <el-button size="small" icon="-undo-copy" @click="undo"></el-button>
+    </el-tooltip>
+    <el-tooltip content="恢复(CTRL+Y)" placement="top">
+      <el-button size="small" icon="-undo-copy el-icon-reversal" @click="redo"></el-button>
+    </el-tooltip>
+    <el-tooltip content="预览歌词(CTRL+ALT+V)" placement="top">
+      <el-button size="small" icon="-preview" @click="preview"></el-button>
+    </el-tooltip>
+  </div>
+   <el-input
+    class="lrc-textarea"
+    ref="textarea"
+    type="textarea"
+    placeholder="请输入歌词文本"
+    :value="value"
+    :autosize="{ minRows: 15, maxRows: 15 }"
+    @input="updateValue($event)"
+    @keydown.native.f9="add"
+    @keydown.native.f10="rp"
+    @keydown.native.f11="rm"
+    @keydown.native.f12="del"
+    @keydown.native.ctrl.z="undo"
+    @keydown.native.ctrl.y="redo"
+    @keydown.native.ctrl.v="preview"
+  >
+  </el-input>
+  <div class="lrc-editor_status-bar">
+    <span v-if="model.songName">正在编辑歌曲 《{{ model.songName }}》 的歌词，编辑人: {{ model.authorName || '匿名' }}</span>
+    <span v-else>LRC Editor Version 1.1.0</span>
+    <span class="lrc-editor_timebar" v-show="savetime"><i class="el-icon-time"></i> {{ savetime }}</span>
+  </div>
+</div>
